@@ -366,21 +366,31 @@ def getGroupIndex(temp_group,temp_cov,temp_time,testcov,testtime):
 
 
 if __name__ == '__main__':
-        path = '../data/'
-        subject_list = readFile(path + 'uselist-all')
+        path = '/PTCP/subject/experiment/'
         g_n = int(sys.argv[1])
         tl_n = float(sys.argv[2])
+        tosem_path = str(sys.argv[3])
+        gran = str(sys.argv[4])
+        '''
+        if 'dynamic' in tosem_path:
+            subject_list = readFile(path + 'uselist-adddy')
+        elif 'callgraph' in tosem_path:
+            subject_list = readFile(path + 'uselist-addcg')
+        else:
+            raw_input('error check ...') 
+        '''
+        subject_list = readFile(path + 'uselist-gnmiss')
         for subject in subject_list:
                 #if subject in skip:
                 #    continue
-                subject_path = path + subject + '/'
+                subject_path = path + subject + '/' + tosem_path + '/'
                 print subject_path + ' is starting...'
-                if os.path.exists(subject_path + 'group'+str(g_n)+'/') == False:
-                        os.makedirs(subject_path + 'group'+str(g_n)+'/')
+                if os.path.exists(subject_path + gran + '/' + str(tl_n) +'avg-new/group'+str(g_n)+'/') == False:
+                        os.makedirs(subject_path + gran + '/' + str(tl_n) +'avg-new/group'+str(g_n)+'/')
 
                 testlist = readFile(subject_path + 'testList')
-                coveragelist = readFile(subject_path + 'stateMatrix-reduce.txt')
-                coveragenumber = readFile(subject_path + 'reduce-index.txt')
+                coveragelist = readFile(subject_path + gran + 'Matrix-reduce.txt')
+                coveragenumber = readFile(subject_path + gran + '-reduce-index.txt')
                 for i in range(len(coveragenumber)):
                         coveragenumber[i] = int(coveragenumber[i])
                 global CoverageNumber
@@ -398,16 +408,16 @@ if __name__ == '__main__':
                 prioritize_time = time.time() - st
                 if countnumber(arp) != len(testlist):
                     print 'not equal !' + str(countnumber(arp)) + ' : ' + str(len(testlist))
-                f = open(subject_path + str(tl_n) + 'avg-new/group'+str(g_n)+'/arp_withouttime.txt','w')
+                f = open(subject_path + gran + '/' + str(tl_n) + 'avg-new/group'+str(g_n)+'/arp_withouttime.txt','w')
                 for group_item in arp:
                         for test_item in group_item:
                                 f.write(str(test_item) + '\t')
                         f.write('\n')
                 f.close()
-                f_time = open(subject_path + str(tl_n) + 'avg-new/group'+str(g_n)+'/timearp_withouttime','w')
+                f_time = open(subject_path + gran + '/' + str(tl_n) + 'avg-new/group'+str(g_n)+'/timearp_withouttime','w')
                 f_time.write(str(prioritize_time))
                 f_time.close()
-                f_tolerate = open(subject_path + str(tl_n) + 'avg-new/group'+str(g_n)+'/toleratearp_withouttime','w')
+                f_tolerate = open(subject_path + gran + '/' + str(tl_n) + 'avg-new/group'+str(g_n)+'/toleratearp_withouttime','w')
                 f_tolerate.write(str(tc))
                 f_tolerate.close()
                 #print arp

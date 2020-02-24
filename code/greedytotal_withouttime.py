@@ -260,23 +260,28 @@ def greedytotal(g_number, test_name, test_cov, test_time, cov_number, avg_number
     return sorted_group_name,toleratenumber        
 
 if __name__ == '__main__':
-    #greedytotal(2,['t1','t2','t3','t4'],['000001','111110','101000','101000'],[50,20,70,200],20)
-    #print greedytotal(2,['t1','t2','t3','t4'],['000001','111110','101000','101000'],[50,200,60,20],20)
-
-    # folder for data
-    path = '../data/'
-    subject_list = readFile(path + 'uselist-all')
-    #passlist = readFile(path + 'uselist-cry')
+    path = '/PTCP/subject/experiment/'
     g_n = int(sys.argv[1])
     tl_n = float(sys.argv[2])
+    tosem_path = str(sys.argv[3])
+    gran = str(sys.argv[4])
+    '''
+    if 'dynamic' in tosem_path:
+        subject_list = readFile(path + 'uselist-adddy')
+    elif 'callgraph' in tosem_path:
+        subject_list = readFile(path + 'uselist-addcg')
+    else:
+        raw_input('error check ...')
+    '''
+    subject_list = readFile(path + 'uselist-all')
     for subject_item in subject_list:
         #if subject_item in passlist:
         #    continue
         #print subject_item
-        subject_path = path + subject_item + '/'
+        subject_path = path + subject_item + '/' + tosem_path + '/'
         testlist = readFile(subject_path + 'testList')
-        coveragelist = readFile(subject_path + 'stateMatrix-reduce.txt')
-        numberlist = readFile(subject_path + 'reduce-index.txt')
+        coveragelist = readFile(subject_path + gran + 'Matrix-reduce.txt')
+        numberlist = readFile(subject_path + gran + '-reduce-index.txt')
         if os.path.exists(subject_path + 'exeTime.txt') == True:
             timelist = readFile(subject_path + 'exeTime.txt')
         else:
@@ -288,18 +293,18 @@ if __name__ == '__main__':
         tt,tc =  greedytotal(g_n,testlist,coveragelist,timelist,numberlist,tl_n)
         prioritize_time = time.time() - st
 
-        if os.path.exists(subject_path + str(tl_n) +'avg-new/group'+str(g_n)+'/') == False:
-            os.makedirs(subject_path + str(tl_n) + 'avg-new/group'+str(g_n)+'/')
-        f = open(subject_path + str(tl_n) + 'avg-new/group'+str(g_n)+'/greedytotal_withouttime.txt','w')
+        if os.path.exists(subject_path + gran + '/' + str(tl_n) +'avg-new/group'+str(g_n)+'/') == False:
+            os.makedirs(subject_path + gran + '/' + str(tl_n) + 'avg-new/group'+str(g_n)+'/')
+        f = open(subject_path + gran + '/' + str(tl_n) + 'avg-new/group'+str(g_n)+'/greedytotal_withouttime.txt','w')
         for group_item in tt:
             for test_item in group_item:
                 f.write(test_item + '\t')
             f.write('\n')
         f.close()
-        f_time = open(subject_path + str(tl_n) + 'avg-new/group'+str(g_n)+'/timegreedytotal_withouttime','w')
+        f_time = open(subject_path + gran + '/' + str(tl_n) + 'avg-new/group'+str(g_n)+'/timegreedytotal_withouttime','w')
         f_time.write(str(prioritize_time))
         f_time.close()
-        f_tolerate = open(subject_path + str(tl_n) + 'avg-new/group'+str(g_n)+'/tolerategreedytotal_withouttime','w')
+        f_tolerate = open(subject_path + gran + '/' + str(tl_n) + 'avg-new/group'+str(g_n)+'/tolerategreedytotal_withouttime','w')
         f_tolerate.write(str(tc))
         f_tolerate.close()
         print subject_path + ' is completed! ' + str(tc)

@@ -1013,22 +1013,34 @@ def randomInitCoverage(size_test,size_cov):
 
 
 if __name__ == '__main__':
-    path = '../data/'
-    subject_list = readFile(path + 'uselist-all')
+    path = '/PTCP/subject/experiment/'
     g_n = int(sys.argv[1])
     tl_n = float(sys.argv[2])
+    tosem_path = str(sys.argv[3])
+    gran = str(sys.argv[4])
+    '''
+    if 'dynamic' in tosem_path:
+        subject_list = readFile(path + 'uselist-adddy')
+    elif 'callgraph' in tosem_path:
+        subject_list = readFile(path + 'uselist-addcg')
+    else:
+        raw_input('error check ...')
+    '''
+    subject_list = readFile(path + 'uselist-all')
     for subject_item in subject_list:
-        #if subject_item == 'camel-core' or subject_item == 'commons-math':
-        #    continue
+        if subject_item == 'camel-core' or subject_item == 'commons-math':
+            continue
         #if subject_item in skip or subject_item in larges:
         #    continue
-        subject_path = path + subject_item + '/'
+        subject_path = path + subject_item + '/'  + tosem_path + '/'
         global log_flag
         log_flag = subject_item
         testlist = readFile(subject_path + 'testList')
+        if len(testlist) < (g_n + 2):
+            continue
         print subject_item +  ' has tests : ' + str(len(testlist))
-        coveragelist = readFile(subject_path + 'stateMatrix-reduce.txt')
-        numberlist = readFile(subject_path + 'reduce-index.txt')
+        coveragelist = readFile(subject_path + gran + 'Matrix-reduce.txt')
+        numberlist = readFile(subject_path + gran + '-reduce-index.txt')
         #timelist = readFile(subject_path + 'time.txt')
         if os.path.exists(subject_path + 'exeTime.txt') == True:
             timelist = readFile(subject_path + 'exeTime.txt')
@@ -1049,17 +1061,17 @@ if __name__ == '__main__':
                 result_list[group_index][test_index] = testlist[ss[group_index][test_index]]
         prioritize_time = time.time() - st
         
-        if os.path.exists(subject_path + str(tl_n) + 'avg-new/group'+str(g_n)+'/') == False:
-            os.makedirs(subject_path + str(tl_n) + 'avg-new/group'+str(g_n)+'/')
+        if os.path.exists(subject_path + gran + '/' + str(tl_n) + 'avg-new/group'+str(g_n)+'/') == False:
+            os.makedirs(subject_path + gran + '/' + str(tl_n) + 'avg-new/group'+str(g_n)+'/')
             
-        f = open(subject_path + str(tl_n) + 'avg-new/group'+str(g_n)+'/genetic_withouttime.txt','w')
+        f = open(subject_path + gran + '/' + str(tl_n) + 'avg-new/group'+str(g_n)+'/genetic_withouttime.txt','w')
         for group_item in result_list:
             for test_item in group_item:
                 #print test_item
                 f.write(test_item + '\t')
             f.write('\n')
         f.close()
-        f_time = open(subject_path + str(tl_n) + 'avg-new/group'+str(g_n)+'/timegenetic_withouttime','w')
+        f_time = open(subject_path + gran + '/' + str(tl_n) + 'avg-new/group'+str(g_n)+'/timegenetic_withouttime','w')
         f_time.write(str(prioritize_time))
         f_time.close()
         

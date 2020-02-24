@@ -673,10 +673,10 @@ def CrossOver_coarsness(temp_list,temp_limit):
                                 for j in p2[i][p2_Kth[i]:]:
                                         t2.append(j)
                 #print 'check point 1 : ' + str(time.time()-cst)
-		        t1 = CrossOver_Sort(t1,p2)
+		t1 = CrossOver_Sort(t1,p2)
                 t2 = CrossOver_Sort(t2,p1)
-		        tt1 = copy.deepcopy(t1)
-		        tt2 = copy.deepcopy(t2)
+		tt1 = copy.deepcopy(t1)
+		tt2 = copy.deepcopy(t2)
                 #print 'check point 2 : ' + str(time.time()-cst)
                 # construct the new individuals : o1 and o2
                 for i in range(len(p1)):
@@ -698,7 +698,7 @@ def CrossOver_coarsness(temp_list,temp_limit):
                         o1_cov[candidate_group] = bitarray.to01(bitarray(CoverageList[candidate_test])|bitarray(o1_cov[candidate_group]))
                         o1[candidate_group].append(candidate_test)
                         t1.pop(t1.index(candidate_test))
-		        while len(t2) > 0:
+		while len(t2) > 0:
                         cov_test = t2[0]
                         (candidate_test,candidate_group) = getCandidate(o2_time,o2_cov,temp_limit,cov_test)
                         o2_time[candidate_group] += TimeList[candidate_test]
@@ -744,7 +744,7 @@ def CrossOver_fine(temp_list):
 	result_list = []
 	for crossover_index in range(len(crossover_list)/2):
 		p1 = crossover_list[2*crossover_index]
-        p2 = crossover_list[2*crossover_index+1]
+                p2 = crossover_list[2*crossover_index+1]
 		# Mth : randomly select one group to execute crossover
 		Mth = random.randint(0,len(crossover_list[0])-1)
 		#Ktime = random.randint(0,getMax(getTime(p1[Mth]),getTime(p2[Mth])))
@@ -792,7 +792,7 @@ def CrossOver_fine(temp_list):
 
 def Mutation_coarsness(temp_list):
         mutate_list = copy.deepcopy(temp_list)
-	    result_list = []
+	result_list = []
         for mutate_index in range(len(mutate_list)):
                 Mth = random.sample(range(0,len(mutate_list[mutate_index])-1),2)
                 p1 = mutate_list[mutate_index]
@@ -1087,20 +1087,32 @@ def randomInitCoverage(size_test,size_cov):
 
 
 if __name__ == '__main__':
-	path = '../data/'
-	subject_list = os.listdir(path)
+	path = '/PTCP/subject/experiment/'
 	g_n = int(sys.argv[1])
 	tl_n = float(sys.argv[2])
+        tosem_path = str(sys.argv[3])
+        gran = str(sys.argv[4])
+        '''
+        if 'dynamic' in tosem_path:
+            subject_list = readFile(path + 'uselist-adddy')
+        elif 'callgraph' in tosem_path:
+            subject_list = readFile(path + 'uselist-addcg')
+        else:
+            raw_input('error check ...')
+        '''
+        subject_list = readFile(path + 'uselist-all')
 	for subject_item in subject_list:
-		#if subject_item == 'camel-core' or subject_item == 'commons-math':
-		#	continue
-		subject_path = path + subject_item + '/'
+                if subject_item == 'camel-core' or subject_item == 'commons-math':
+                    continue
+		subject_path = path + subject_item + '/' + tosem_path + '/'
 		global log_flag
 		log_flag = subject_item
         	testlist = readFile(subject_path + 'testList')
+                if len(testlist) < (g_n + 2):
+                    continue
 		print subject_item +  ' has tests : ' + str(len(testlist))
-        	coveragelist = readFile(subject_path + 'stateMatrix-reduce.txt')
-		numberlist = readFile(subject_path + 'reduce-index.txt')
+        	coveragelist = readFile(subject_path + gran + 'Matrix-reduce.txt')
+		numberlist = readFile(subject_path + gran + '-reduce-index.txt')
 		#timelist = readFile(subject_path + 'time.txt')
 		if os.path.exists(subject_path + 'exeTime.txt') == True:
                         timelist = readFile(subject_path + 'exeTime.txt')
@@ -1121,17 +1133,17 @@ if __name__ == '__main__':
 				result_list[group_index][test_index] = testlist[ss[group_index][test_index]]
 		prioritize_time = time.time() - st
 		
-		if os.path.exists(subject_path + str(tl_n) + 'avg-new/group'+str(g_n)+'/') == False:
-			os.makedirs(subject_path + str(tl_n) + 'avg-new/group'+str(g_n)+'/')
+		if os.path.exists(subject_path + gran + '/' + str(tl_n) + 'avg-new/group'+str(g_n)+'/') == False:
+			os.makedirs(subject_path + gran + '/' + str(tl_n) + 'avg-new/group'+str(g_n)+'/')
 			
-		f = open(subject_path + str(tl_n) + 'avg-new/group'+str(g_n)+'/genetic_withtime.txt','w')
+		f = open(subject_path + gran + '/' + str(tl_n) + 'avg-new/group'+str(g_n)+'/genetic_withtime.txt','w')
 		for group_item in result_list:
 			for test_item in group_item:
 				#print test_item
 				f.write(test_item + '\t')
 			f.write('\n')
 		f.close()
-		f_time = open(subject_path + str(tl_n) + 'avg-new/group'+str(g_n)+'/timegenetic_withtime','w')
+		f_time = open(subject_path + gran + '/' + str(tl_n) + 'avg-new/group'+str(g_n)+'/timegenetic_withtime','w')
 		f_time.write(str(prioritize_time))
 		f_time.close()
 		
