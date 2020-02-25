@@ -1,5 +1,5 @@
- PTCP
-this is a simple document for all the scripts used in PTCP, including collecting dynamic and static coverage, collecting mutants, collect test dependency, running parallel test prioritization techniques, and evaluating using APFDc/FT/AT. As the data is too large, you can download from : [https://drive.google.com/open?id=1Ci_p-QFtKvM3OIAn9_b9kZTwmGYlhTev](https://drive.google.com/open?id=1Ci_p-QFtKvM3OIAn9_b9kZTwmGYlhTev).
+# PTCP
+This is a simple document for all the scripts used in PTCP, including collecting dynamic and static coverage, collecting mutants, collect test dependency, running parallel test prioritization techniques, and evaluating using APFDc/FT/AT. As the data is too large, you can download from : [https://drive.google.com/open?id=1Ci_p-QFtKvM3OIAn9_b9kZTwmGYlhTev](https://drive.google.com/open?id=1Ci_p-QFtKvM3OIAn9_b9kZTwmGYlhTev).
 
     1. the dir 'code/' stores the script used in this experiment, including eight parallel test prioritization techniques.
     2. the dir 'subjects/experiment/' stores the data used in this experiment and the results in our study, while
