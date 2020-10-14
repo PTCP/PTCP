@@ -1,8 +1,10 @@
 # PTCP
 This is a simple document for all the scripts used in PTCP, including collecting dynamic and static coverage, collecting mutants, collect test dependency, running parallel test prioritization techniques, and evaluating using APFDc/FT/AT.
 
-    1. the dir 'code/' stores the script used in this experiment, and the dir 'code/prioritization' stores the implementation of eight parallel test prioritization techniques.
-    2. the dir 'subjects/' stores the data used in this experiment and the results in our study.
+    1. the dir 'code/' stores the scripts used in this experiment, and the dir 'code/prioritization' stores the implementation of eight parallel test prioritization techniques.
+    2. the dir 'code/prioritization' stores the scripts of eight parallel test prioritization techniques.
+    3. the dir 'subjects/' stores the data used in this experiment and the results in our study.
+    
 
 * collecting dynamic coverage
     * run python 1collect_clover.py : using clover to collect dynamic coverage.
