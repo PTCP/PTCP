@@ -10,19 +10,14 @@ import pprint
 from xml.dom.minidom import parseString
 from lxml import etree
 
-
+# read file, return as list
 def readFile(filepath):
     f = open(filepath)
     content = f.read()
     f.close()
     return content.splitlines()
 
-
-def writeFile(filepath,filecontent):
-    f = open(filepath,'a')
-    f.write(filecontent + '\n')
-    f.close()
-
+# read file, return as string
 def readFile_content(filepath):
     f = open(filepath)
     content = f.read()
@@ -30,12 +25,8 @@ def readFile_content(filepath):
     return content
 
 if __name__ == '__main__':
-    path = '/PTCP/subject/source/'
+    path = './subjects/source/'
     success = path + 'successlist'
-    fail = path + 'faillist'
-    fail_log = '[INFO] BUILD FAILURE\n'
-    success_log = '[INFO] BUILD SUCCESS\n'
-
     clover = '''
 	<dependency>
             <groupId>org.openclover</groupId>
@@ -43,32 +34,15 @@ if __name__ == '__main__':
             <version>4.2.0</version>
             <type>maven-plugin</type>
         </dependency>
-
-
     '''
-    #filelist = os.listdir(path)
-    #f = open(path + 'sublist','w')
-    #for fileitem in filelist:
-    #    f.write(fileitem + '\n')
-    #f.close()
+    
     filelist = readFile(path + 'uselist-add')
-
-
-	
     for fileitem in filelist:
         sub_path = path + fileitem + '/'
         print(sub_path)
         os.chdir(sub_path)
         pom = sub_path + 'pom.xml.ori'
-        #output = commands.getoutput('mvn test')
-	#commands.getoutput('cp pom.xml pom.xml.ori')
-	
-        #if fail_log in output:
-        #    writeFile(fail,fileitem)
-        #elif success_log in output:
-        #    writeFile(success,fileitem)    
-
-         
+        
         print pom
         ns_all = etree.fromstring(readFile_content(pom)).nsmap
         ns = etree.fromstring(readFile_content(pom)).nsmap[None]
@@ -84,11 +58,7 @@ if __name__ == '__main__':
         dependency_node = root.findall('{' + ns + '}' + 'dependencies')[0]
         print dependency_node.tag
         dependency_node.append(ET.fromstring(clover))
-        #plugins_node = build_node.findall('{' + ns + '}' + 'dependencies')
-        #plugins_node.append(ET.fromstring(clover))
         tree.write(sub_path + 'pom.xml.openclover', encoding="utf-8",xml_declaration=True,method='xml')
-        
-        
         commands.getoutput('cp pom.xml.openclover pom.xml')
         stime = time.time()
         output = commands.getoutput('mvn clean clover:setup test clover:aggregate clover:clover')
@@ -100,4 +70,3 @@ if __name__ == '__main__':
         f.write(str(timelog))
         f.close()
         print fileitem + ' is completed!'
-        #raw_input('check...')

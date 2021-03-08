@@ -1,6 +1,7 @@
 import os
 import copy
 
+# read file, return as list
 def readFile(filepath):
     f = open(filepath)
     content = f.read()
@@ -9,12 +10,14 @@ def readFile(filepath):
 
 
 if __name__ == '__main__':
-    path = '/PTCP/subjects/source/'
+    path = './subjects/source/'
     subject_list = os.listdir(path)
     subject_list = readFile(path + 'uselist-all')
     for subject in subject_list:
+        # the dir for dynamic statement coverage on testmethod-level.
         subject_path = path + subject + '/testmethod/dynamic/state'
         testlist = readFile(subject_path + 'testList')
+        # read original coverage matrix
         covlist = readFile(subject_path + 'stateMatrix.txt')
         result = []
         print subject_path + ' is starting...'

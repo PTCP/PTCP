@@ -8,45 +8,10 @@ SubjectRootPath = ''
 ResusltRootPath = ''
 prefix = ''
 
-
-'''
-def GetSuccessFile(readFilePath, writeFilePath):
-	SubjectList = []
-	Flag = True
-	tmpName = ''
-	readFile = open(readFilePath)
-	for line in readFile:
-		line = line.strip()
-		if line.startswith('SUB:'):
-			Flag = True
-			tmpName = line.replace('SUB:', '')
-		elif line.startswith('method'):
-			if 'FAIL' in line:
-				Flag = False
-		elif line.startswith('statement'):
-			if 'FAIL' in line:
-				Flag = False
-		elif line.startswith('branch'):
-			if 'FAIL' in line:
-				Flag = False
-			if Flag == True:
-				SubjectList.append(tmpName)
-	readFile.close()
-	
-	writeFile = open(writeFilePath, 'w')
-	for item in SubjectList:
-		writeFile.write(item + '\n')
-	writeFile.close()
-	
-	return SubjectList
-'''
-
-
 #xml : src file list + test file list
 #source hmtl: statement sum
 #test html: id and test name map
 #src js: coverage matrix 
-
 def readSubjectList(readFilePath):
 	SubjectList = []
 	readFile = open(readFilePath)
@@ -123,9 +88,9 @@ def anaMain(xmlFilePath, subName): #loc
 
 
 	#map id and test name
-        print(xmlFilePath)
+	print(xmlFilePath)
 	mapIdName = mapTest(TestFileList, xmlFilePath)
-        print(TestFileList)
+	print(TestFileList)
 	
 	writefile = open(ResultRootPath +'/' + subName +  '/testList', 'w')
 	for item in mapIdName:
@@ -148,10 +113,6 @@ def FillMatrixState(StateCovMatrix, MethodCovMatrix, CondCovMatrix, SrcFileList,
 	filePtr = 0
 	debugcount = 0
 	for srcFile in SrcFileList:
-		#debugcount = debugcount + 1
-		#if debugcount > 30:
-		#	break
-	
 		currenPtr = lineList[filePtr]
 		filePtr = filePtr + 1
 		#print currenPtr
@@ -208,9 +169,7 @@ def reacordMatrix(TheMatrix, recordPath, testSum, UnitSum):
 #map test id and test name
 def mapTest(TestFileList, xmlFilePath):
 	testNumber = 0
-
-
-#get test number
+	#get test number
 	for testFile in TestFileList:
 		htmlPath = xmlFilePath + '/' + testFile + '.html'
 		htmlFile = open(htmlPath)
@@ -222,13 +181,6 @@ def mapTest(TestFileList, xmlFilePath):
 			testID = testID.replace('tc-', '')
 			if int(testID) + 1 > testNumber:
 				testNumber = int(testID) + 1
-			'''
-			if testID not in testIDSet:
-				print str(testID)
-				testIDSet.append(testID)
-				testNumber = testNumber + 1'''
-
-#construct map 
 
 	mapIdName = []
 	for i in range(0, testNumber):
@@ -249,17 +201,16 @@ def mapTest(TestFileList, xmlFilePath):
 			methodName = methodName.replace('.', '/')
 			mapIdName[int(testID)] = methodName
 	
-	#for item in mapIdName:
-	#	print item
 	return mapIdName
 
-
+# read file, return as list
 def readFile(filepath):
 	f = open(filepath) 
 	content = f.read()
 	f.close()
 	return content.splitlines()
 
+# get the prefix for subjects by analyzing dir
 def getPrefix(tt):
 	temp = tt
 	while True:
@@ -272,16 +223,10 @@ def getPrefix(tt):
 			return result + '/'
 
 if __name__ == "__main__":
-	#SubjectList = GetSuccessFile(SubjectRootPath + '/cloverConclusion.txt', SubjectRootPath + '/SuccessSubjectList.txt')
-	
-	#anaMain(SubjectRootPath + '/' + 'hbase-hadoop-compat' + '/cloverResult/statement/site/clover', 'hbase-hadoop-compat')
 	global SubjectRootPath
-	SubjectRootPath = '/PTCP/subjects/source/'
-	
-	#SubjectList = readSubjectList(SubjectRootPath + '/SuccessSubjectList.txt')
-	#SubjectList = ['webbit']
+	SubjectRootPath = './subjects/source/'
 	SubjectList = readFile(SubjectRootPath + 'uselist-all')
-	#SubjectList = ['xembly']
+
 	for sub in SubjectList:
 		#file have the handled subject list
 		global ResultRootPath
@@ -297,9 +242,12 @@ if __name__ == "__main__":
 		ResultRootPath = '/PTCP/subjects/experiment/' + sub + '/coverage' # anonymous processing
 		if os.path.exists(ResultRootPath) == False:
 			os.makedirs(ResultRootPath)
-		#prefix = 'org/apache/hadoop/chukwa/' #prefix of subject
+		
+		# specify the prefix for some subjects, because the correct prefix can not be extracted from dir automatically
+		#prefix = 'org/apache/hadoop/chukwa/'
 		#prefix = 'com/tumblr/jumblr/'
 		#prefix = 'org/xembly/'
+		
 		prefix = getPrefix(subject_path + 'src/main/java/')
 		print prefix
 
