@@ -10,43 +10,32 @@ from xml.dom.minidom import parseString
 import sys
 from lxml import etree
 
-'''
-def readFile(filepath):
-	f = open(filepath)
-	content = f.read()
-	f.close()
-	return content.splitlines()
-'''
 
+# read file, return as string
 def readFile(filepath):
-        f = open(filepath)
-        content = f.read()
-        f.close()
-        return content
+    f = open(filepath)
+    content = f.read()
+    f.close()
+    return content
 
+# read file, return as list
 def readList(filepath):
-        f = open(filepath)
-        content = f.read()
-        f.close()
-        return content.splitlines()
+    f = open(filepath)
+    content = f.read()
+    f.close()
+    return content.splitlines()
 
 def sortList(temp1,temp2):
-        sortedList = []
-        for item in temp2:
-                if item in temp1:
-                        sortedList.append(item)
-        return sortedList
-
-def writeFile(filepath,content):
-        f = open(filepath,'a')
-        f.write(content + '\n')
-        f.close()
+    sortedList = []
+    for item in temp2:
+        if item in temp1:
+                sortedList.append(item)
+    return sortedList
 
 
 if __name__ == '__main__':
-	#path = '/devdata/zjy/subject_repository/tcp_large/'
-	path = '/PTCP/subjects/source/'
-	timelistener = '/PTCP/code/collect_subject/MyExecutionListener.java'
+	path = './subjects/source/'
+	timelistener = './code/tool/MyExecutionListener.java'
 	subject_list = readList(path + 'uselist-all')
 	#subject_list = os.listdir(path)
 	timelist = []
@@ -83,7 +72,7 @@ if __name__ == '__main__':
 			pass
 		os.system('cp -r target target_clover')
 		os.system('cp ' + timelistener + ' ' + 'src/test/java/MyExecutionListener.java')
-		#os.system('mkdir time')
+		
 		if os.path.exists(subject_path + 'pom.xml.ori') == False:
 			os.system('cp pom.xml pom.xml.ori')
 		#os.system('cp pom.xml.ori pom.xml')
@@ -109,6 +98,7 @@ if __name__ == '__main__':
 		plugins_node[0].append(ET.fromstring(config))
 		tree.write(subject_path + 'pom.xml.time', encoding="utf-8",xml_declaration=True,method='xml')
 		
+		# replace pom.xml with pom.xml.time, and execute 'mvn test' to collect testing time
 		os.system('cp pom.xml.time pom.xml')
 
 		os.system('mvn clean')
@@ -117,10 +107,3 @@ if __name__ == '__main__':
 		
 		timelist.append(subject)
 		print subject + ' is completed!'
-	'''
-	f = open(path + 'timelist1','w')
-	for item in timelist:
-		f.write(item + '\n')
-	f.close()
-	'''
-		

@@ -29,7 +29,6 @@ def TestName_Index(temp_namelist,TestList):
     return result
 
 
-#getTime(test_index,timelist,testmap,index_list)
 def getTime(test_index,timelist,testmap,index_list):
     totaltime = 0
     atime = time.time()
@@ -115,8 +114,6 @@ def writefileSingle(dirpath,filename,content1,content2,content3):
 
     f = open(dirpath + 'dectedtime/lasttime/randoms/' + filename,'w')
     f.write(str(content3) + '\n')
-    #print content3
-    #f.write(content3)
     f.close()
         
         
@@ -144,42 +141,22 @@ def writefile(dirpath,filename,content1,content2,content3):
 
 
 if __name__ == '__main__':
-    path = '/devdata/zjy/parallelTCP/tosem_add/experiment/'
+    path = './subject/experiment/'
     subject_list = readFile(path + 'uselist-all')
-    #subject_list.remove('camel-core')
-    #subject_list.remove('commons-math')
-    #subject_list = ['camel-core','commons-math']
     subjectsdict = {}
     for i in range(len(subject_list)):
         subjectsdict[subject_list[i].lower()] = subject_list[i]
     indexlist = copy.deepcopy(subjectsdict.keys())
     indexlist.sort()
-    #indexlist = ['assertj-core']
-    #indexlist = ['webbit','raml-java-parser']
-    #indexlist = ['jackson-datatype-guava-v2']
-    #pass_list = readFile(path + 'uselist-cry')
+    
     #gl = float(sys.argv[1])
     result = []
-    #gn = [50,100]
-    #gn = [50,100,200]
-    #gn = [4,8,12,16]
-    #ts = [1.5,2.0]
-    #gn = [12]
-    #ts = [1.5]
-    #ts = [1.25,1.75]
-    #gn = [1]
-    #ts = [3.0]
     gn = [4,8,12,16]
     ts = [1.25,1.5,1.75,2.0]
-    #ts = [20.0]
+    # more argvs for tosem_path and grans are referred to README.md
     tosem_path = 'testmethod/dynamic'
     gran = 'state'
-    #apps = ['random']
-    #apps = ['greedytotal_withtime.txt']
-    #apps = ['arp_withtime.txt']
-    #apps = ['genetic_withouttime.txt','genetic_withtime.txt']
     apps = ['greedytotal_withouttime.txt','greedyadditional_withouttime.txt','genetic_withouttime.txt','arp_withouttime.txt','greedytotal_withtime.txt','greedyadditional_withtime.txt','genetic_withtime.txt','arp_withtime.txt','random']
-    #apps = ['greedytotal_withouttime.txt','greedyadditional_withouttime.txt','arp_withouttime.txt','greedytotal_withtime.txt','greedyadditional_withtime.txt','arp_withtime.txt']
     for sindex in indexlist:
         subject_item = subjectsdict[sindex]
         #if subject_item in pass_list:
@@ -208,16 +185,6 @@ if __name__ == '__main__':
                     temp.append(i)
             mutantmap.append(temp)
 
-        # testing
-        ''' 
-        testmap = []
-        for i in range(len(mulist[0])):
-            temp = []
-            for j in range(len(testlist)):
-                if mulist[j][i]  == '1':
-                    temp.append(j)
-            testmap.append(temp)
-        '''
 
         for g in gn:
             for t in ts:
@@ -262,16 +229,8 @@ if __name__ == '__main__':
                     accratio.append(temp[i]/(temp[-1]*1.0))
                 sresult.append(accratio)
                 result.append(accratio)
-        #for i in range(len(apps)):
-        #    tempcount = 0
-        #    for j in range(len(sresult)):
-        #        tempcount += sresult[j][i]
-        #    tempcount = tempcount/(len(sresult)*1.0)
-        print sindex + ' is completed!'
-            
-    
-    #for i in range(len(result)):
         
+        print sindex + ' is completed!'
 
 
 

@@ -1,7 +1,5 @@
 import os
 from bitarray import bitarray
-#import bitarray
-#from bitarray import bitdiff
 
 
 def readFile(filepath):
@@ -13,9 +11,8 @@ def readFile(filepath):
 
 
 if __name__ == '__main__':
-    #path_m = '/devdata/zjy/parallelTCP/subjects/'
-    path_c = '/PTCP/subjects/experiment/'
-    subjects = readFile(path_m + 'uselist-all')
+    path_c = './subjects/experiment/'
+    subjects = readFile(path_c + 'uselist-all')
 
     for subject in subjects:
         subject_path_m = path_c + subject + '/testmethod/dynamic/'
@@ -50,13 +47,6 @@ if __name__ == '__main__':
                 testdict[test_c].append(test_index)
             else:
                 testdict[test_c] = [test_index]
-            #if subject == 'scribe-java':
-            #    print(test_m + '  **  ' + test_c)
-        #if subject == 'scribe-java':
-        #    print(testlist)
-        #    print(testdict)
-        #    print(len(testdict.keys()))
-        #    raw_input('check ...')
         f_test = open(subject_path_c + 'testList','w')
         f_cov = open(subject_path_c + 'stateMatrix-reduce.txt','w')
         f_time = open(subject_path_c + 'exeTime','w')

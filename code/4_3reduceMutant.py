@@ -9,19 +9,13 @@ def readFile(filepath):
 
 
 if __name__ == '__main__':
-    #path = '/devdata/zjy/parallelTCP/subject/test/industry/'
-    path = '/PTCP/subjects/source/'
-    #subject_list = ['camel-core']
-    #subject_list = ['java-apns']
+    path = './subjects/source/'
     subject_list = os.listdir(path)
     subject_list = readFile(path + 'uselist-all')
-    #skiplist = readFile(path + 'uselist-cry')
     for subject in subject_list:
-        #if subject in skiplist:
-        #    continue
+        
         subject_path = path + subject + '/testmethod/dynamic/state/'
         testlist = readFile(subject_path + 'testList')
-        #covlist = readFile(subject_path + 'stateMatrix.txt')
         covlist = readFile(subject_path + 'mutantKillMatrix')
         result = []
         print subject_path + ' is starting...'
@@ -55,12 +49,11 @@ if __name__ == '__main__':
             for j in range(len(test)):
                 temp_str += test[j][i]
             use_list.append(temp_str)
-        #f = open(subject_path + 'stateMatrix-reduce.txt','w')
+            
         f = open(subject_path + 'mutantkill-reduce','w')
         for item in use_list:
             f.write(item + '\n')
         f.close()
-        #f = open(subject_path + 'reduce-index.txt','w')
         f = open(subject_path + 'mutantkill-reduce-index','w')
         for item in number_list:
             f.write(str(item) + '\n')

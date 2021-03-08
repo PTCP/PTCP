@@ -11,17 +11,10 @@ def readFile(filepath):
 
 
 if __name__ == '__main__':
-    path = '/devdata/zjy/parallelTCP/subjects/'
+    path = './subjects/source/'
     subject_list = readFile(path + 'uselist-add')
-    #a1 = readFile(path + 'uselist-new')
-    #a2 = readFile(path + 'uselist-add')
-    #uselist = []
-    skiplist = ['commons-email','mango']
     cry = []
     for subject in subject_list:
-        if subject in skiplist:
-            print subject + ' is skip ...'
-            continue
         subject_path = path + subject + '/'
         #print subject
         testlist = readFile(subject_path + 'testList')

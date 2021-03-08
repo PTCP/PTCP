@@ -1,7 +1,6 @@
 import os
 import sys
 import commands
-
 from xml.dom.minidom import parse
 import xml.dom.minidom
 import xml.etree.ElementTree as ET
@@ -10,19 +9,14 @@ import pprint
 from xml.dom.minidom import parseString
 from lxml import etree
 
-
+# read file, return list
 def readFile(filepath):
     f = open(filepath)
     content = f.read()
     f.close()
     return content.splitlines()
 
-
-def writeFile(filepath,filecontent):
-    f = open(filepath,'a')
-    f.write(filecontent + '\n')
-    f.close()
-
+# read file, return string
 def readFile_content(filepath):
     f = open(filepath)
     content = f.read()
@@ -30,11 +24,7 @@ def readFile_content(filepath):
     return content
 
 if __name__ == '__main__':
-    path = '/PTCP/subjects/source/'
-    success = path + 'successlist'
-    fail = path + 'faillist'
-    fail_log = '[INFO] BUILD FAILURE\n'
-    success_log = '[INFO] BUILD SUCCESS\n'
+    path = './subjects/source/'
 
     iDFlakies = '''
 	<plugin>
@@ -53,29 +43,13 @@ if __name__ == '__main__':
             </configuration>
         </plugin>
         ''' 
-
-    #filelist = os.listdir(path)
-    #f = open(path + 'sublist','w')
-    #for fileitem in filelist:
-    #    f.write(fileitem + '\n')
-    #f.close()
     filelist = readFile(path + 'uselist-add')
-
-
 	
     for fileitem in filelist:
         sub_path = path + fileitem + '/'
         os.chdir(sub_path)
         pom = sub_path + 'pom.xml.ori'
-        #output = commands.getoutput('mvn test')
-	#commands.getoutput('cp pom.xml pom.xml.ori')
-	
-        #if fail_log in output:
-        #    writeFile(fail,fileitem)
-        #elif success_log in output:
-        #    writeFile(success,fileitem)    
 
-        
         print pom
         ns_all = etree.fromstring(readFile_content(pom)).nsmap
         ns = etree.fromstring(readFile_content(pom)).nsmap[None]

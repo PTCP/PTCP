@@ -2,7 +2,6 @@ import os
 import random
 import copy
 from bitarray import bitarray
-#import bitarray
 from bitarray import bitdiff
 import time
 import sys
@@ -79,7 +78,6 @@ def getAveragePercentCoverage(chromosome):
 
 # use another algorithm, try to save time
 def getFirstTest(chromosome):
-        #max_time = getMaxTime(chromosome)
         max_time = MaxTime
         result_list = []
         result_dict = {}
@@ -135,17 +133,6 @@ def readTCPfile(filepath):
         result_list.append(temp_group[0:-1])
     return result_list
 
-def readTCPfile_baseline(filepath):
-        f = open(filepath)
-        content = f.read()
-        f.close()
-        result_list = []
-        tt = content.splitlines()
-        for i in range(len(tt)):
-                temp_group = tt[i].split('\t')
-                result_list.append(temp_group[0:-1])
-        return result_list
-
 
 # temp_list = [(apfdc,apfd)...]
 def writeFile(filefolder,filepath,temp_list):
@@ -153,13 +140,9 @@ def writeFile(filefolder,filepath,temp_list):
         os.makedirs(filefolder + 'apfd_total')
     if os.path.exists(filefolder + 'apfdc_total') == False:
         os.makedirs(filefolder + 'apfdc_total/')
-    #if os.path.exists(filefolder + 'apfd_total/random') == False:
-    #    os.makedirs(filefolder + 'apfd_total/random')
-    #if os.path.exists(filefolder + 'apfdc_total/random') == False:
-    #    os.makedirs(filefolder + 'apfdc_total/random')
     f_apfdc = open(filefolder + 'apfdc_total/' + filepath,'w')
     f_apfd  = open(filefolder + 'apfd_total/' + filepath,'w') 
-    #for item in temp_list:
+
     f_apfdc.write(str(temp_list[0]) + '\n')
     f_apfd.write(str(temp_list[1]) + '\n')
     f_apfdc.close()
@@ -191,12 +174,16 @@ def TestName_Index(temp_namelist):
 
 
 if __name__ =='__main__':
-    path = '/PTCP/subjects/experiment/'
+    path = './subjects/experiment/'
     subject_list = readFile(path + 'uselist-all')
-    #gl = float(sys.argv[1])
-    gl = float(2.0)
+    gl = float(sys.argv[1])
+    #gl = float(2.0)
+    # the dir for coverage, e.g., 'testmethod/dynamic'
     tosem_path = str(sys.argv[1])
+    # coverage granularity, e.g., state
     gran = str(sys.argv[2])
+
+    # more argvs are refered to README.md
     for subject_item in subject_list:
         #if subject_item in pass_list:
         #    continue
@@ -240,33 +227,11 @@ if __name__ =='__main__':
         for i in index_list:
             CoverageNumber.append(int(i))
         
-        
-        #group_factor = ['8','12','4','16']
         #group_factor = ['50','100','200']
         group_factor = ['4','8','12','16']
-        #group_factor = ['1']
-        #group_factor = ['200']
+
         for group_index in group_factor:
-            #if group_index == '8' and gl == float(1.5):
-            #    continue
-            #if os.path.exists(subject_path + str(gl) + 'avg-new/group' + group_index) == False:
-            #    continue
-            #tcp_filelist = os.listdir(subject_path + 'group' + group_index)
-            #tcp_filelist = ['genetic_withtime_sus.txt','genetic_withtime.txt','genetic_withtime_coarsness.txt']
-            #tcp_filelist = ['genetic_withouttime.txt','greedytotal_withouttime.txt','greedyadditional_withouttime.txt','arp_withouttime.txt']
-            #tcp_filelist = ['greedytotal_withouttime.txt','random']
-            #tcp_filelist = ['genetic_withouttime.txt','genetic_withtime.txt']
-            #tcp_filelist = ['random']
-            #tcp_filelist = ['greedytotal_withtime.txt']
-            #tcp_filelist = ['arp_withtime.txt']
             tcp_filelist = ['greedytotal_withouttime.txt','greedytotal_withtime.txt','greedyadditional_withouttime.txt','greedyadditional_withtime.txt','genetic_withouttime.txt','genetic_withtime.txt','arp_withouttime.txt','arp_withtime.txt','random']
-            #tcp_filelist = ['greedytotal_withouttime.txt','greedytotal_withtime.txt','greedyadditional_withouttime.txt','greedyadditional_withtime.txt','arp_withouttime.txt','arp_withtime.txt']
-            #tcp_filelist = ['greedyadditional_withouttime.txt','greedyadditional_withtime_comparison.txt','greedyadditional_withtime.txt',
-            #        'greedytotal_withouttime.txt','greedytotal_withtime_comparison.txt','greedytotal_withtime.txt']
-            #if group_index == '':
-            #    tt_index = '8'
-            #else:
-            #    tt_index = group_index
             tt_index = group_index
             
             for tcp_file in tcp_filelist:
@@ -288,28 +253,5 @@ if __name__ =='__main__':
                         writeFile(subject_path + gran + '/' + str(gl) + 'avg-new/evaluate/'+ tt_index + '/','random' + str(i) + '.txt',ss)
             
             print subject_path + ' ' + tt_index + ' is complete!'
-           
-        
-            '''    
-            baseline_filelist = ['GroupTTMethod',
-                              'GroupGAMethod',
-                                'GroupARTMethod',
-                               'GroupGeneticMethod',
-                                    'GroupTAMethod']
-            
-            for baseline_file in baseline_filelist:
-                print str(tt_index) + ' - ' +baseline_file + ' is starting...'
-                if os.path.exists(subject_path +'baseline/statement/' + tt_index + '-' + baseline_file + '.txt') == False:
-                    ss = [0,0]
-                    writeFile(subject_path + str(gl) + 'avg-new/evaluate/'+ tt_index + '/',baseline_file,ss)
-                    print baseline_file + ' ' + tt_index + ' is completed (empty)!'
-                    continue
-                test = readTCPfile_baseline(subject_path +'baseline/statement/' + tt_index + '-' + baseline_file + '.txt')
-                test_index = TestName_Index(test)
-                ss = getAPFDC(test_index)
-                writeFile(subject_path + str(gl) + 'avg-new/evaluate/'+ tt_index + '/',baseline_file,ss)
-                print baseline_file + ' ' + tt_index + ' is complete!' 
-            '''
-
             
         print subject_path + ' is completed!'
