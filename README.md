@@ -8,14 +8,15 @@ This is a simple document for all the scripts used in PTCP, including collecting
 	4. the dir './code/baseline_py' stores the scripts of several sequential test prioritization techniques.
 	5. the dir './code/tools/' stores the tool used in our work to collect static coverage information for java subjects.
    
-
-* the dependencies for this repository 
+#
+the dependencies for this repository 
 	* BeautifulSoup, bitarray, tqdm
 
-* collecting dynamic coverage
-    * run python 1collect_clover.py : using clover to collect dynamic coverage.
-    * run python 1_2analyzeCoverage.py : analyzing the coverage report to get statement/method coverage.
-    * run python 1_3reducecoverage.py : creating reduced matrix for coverage matrix in order to imporve efficiency.
+# 
+collecting dynamic coverage
+    1. run python 1collect_clover.py : using clover to collect dynamic coverage.
+    2. run python 1_2analyzeCoverage.py : analyzing the coverage report to get statement/method coverage.
+    3. run python 1_3reducecoverage.py : creating reduced matrix for coverage matrix in order to imporve efficiency.
 
 * collecting static coverage
     * run python 2collect_callgraph.py : collecting static call graph.
