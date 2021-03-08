@@ -20,6 +20,7 @@ This is a simple document for all the scripts used in PTCP, including collecting
 * collecting static coverage
     * run python 2collect_callgraph.py : collecting static call graph.
     * run python 2_2analyzeCallGraph.py : analyzing the static call graph to get static statement/method coverage.
+    * re-use 1_3reducecoverage.py to create reduced matrix for coverage matrix of call graph (modify the corresponding code matrix file).
 
 * collecting testing time
     * run python 3time.py.
