@@ -268,10 +268,28 @@ def countnumber(templist):
         count += len(item)
     return count
 
+class TestAGA(unittest.TestCase):
+    def test_aga_result(self): 
+        testlist = ['t1','t2','t3','t4','t5','t6']
+        coveragedict = {0:set([0,1,2]),
+                    1:set([2,3,4]),
+                    2:set([0,1]),
+                    3:set([2,4]),
+                    4:set([1,3]),
+                    5:set([4])}
+        numberlist = [1,1,1,1,2]
+        timelist = [4,20,6,2,5,9]
+        oracle = [['t4','t5','t6'],['t1','t3'],['t2']]
+        test_result = greedyAdditional(3,testlist,coveragedict,numberlist,timelist,1.5)[0]
+        print('test result: %s'%str(test_result))
+        self.assertEqual(test_result, oracle)
 
 
 if __name__ == '__main__':
     
+    # test case for AGA
+    unittest.main()
+
     path = '../../subjects/'
     subject_list = readFile(path + 'uselist-all')
     if len(sys.argv) == 5:
