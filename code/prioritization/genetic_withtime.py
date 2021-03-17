@@ -43,7 +43,7 @@ def LoadPickle(filepath):
 def checknumber(temp_list):
     count = 0
     for item in temp_list:
-    count += len(item)
+        count += len(item)
     return count
 
 def checkIsEmpty(temp_list):
@@ -80,291 +80,290 @@ def getRandomList(temp_number, temp_name, temp_limit):
 
 
 def GenerateRandomPopulation(g_number, test_name, time_limit):
-	temp_list = []
-	while len(temp_list) < PopulationSize:
-		temp_population = getRandomList(g_number, test_name, time_limit)
-		if checkIsEmpty(temp_population) == 'empty':
-			continue
-		if temp_population not in temp_list and checklimit(temp_population):
-			temp_list.append(temp_population)
-	tt = dropRepeat(temp_list)
-	if len(tt) != len(temp_list):
-		print 'length not equal ...'
-		print len(tt)
-		print len(temp_list)
-		raw_input('random init error ...')
-	return temp_list
+    temp_list = []
+    while len(temp_list) < PopulationSize:
+        temp_population = getRandomList(g_number, test_name, time_limit)
+        if checkIsEmpty(temp_population) == 'empty':
+            continue
+        if temp_population not in temp_list and checklimit(temp_population):
+            temp_list.append(temp_population)
+    tt = dropRepeat(temp_list)
+    if len(tt) != len(temp_list):
+        print 'length not equal ...'
+        print len(tt)
+        print len(temp_list)
+        #raw_input('random init error ...')
+        assert(0)
+    return temp_list
 
 
 
 def getCoverageIndex(a,b):
-	ci_list = []
-	for i in range(len(a)):
-		if a[i] != b[i]:
-			ci_list.append(i)
-	return ci_list	
+    ci_list = []
+    for i in range(len(a)):
+        if a[i] != b[i]:
+            ci_list.append(i)
+    return ci_list	
 
 
 # use another algorithm, try to save time
 def getFirstTest(chromosome):
-	max_time = MaxTime
-	result_list = []
-	result_dict = {}
+    max_time = MaxTime
+    result_list = []
+    result_dict = {}
     covered_cov = set()
-	st = time.time()
-	for group_item in chromosome:
-		group_time  = 0
-		for test_item in group_item:
-			group_time += TimeList[test_item]
-			temp_count = max_time - group_time + 0.5 * TimeList[test_item]
-			if group_time in result_dict.keys():
-				result_dict[group_time].append((group_time,test_item,temp_count))
-			else:
-				result_dict[group_time] = [(group_time,test_item,temp_count)]
-	et_1 = time.time()
-	tt = copy.deepcopy(result_dict.keys())
-	tt.sort()
-        init_cov = set()
-	for item in tt:
-                temp_cov = set()
-		for test_item in result_dict[item]:
-			temp_name = test_item[1]
-                        temp_cov = temp_cov|CoverageDict[temp_name]
-		temp_diff_index = temp_cov - init_cov
-                init_cov = init_cov|temp_cov
-		for i in temp_diff_index:
-			result_list.append((test_item,CoverageNumber[i]))
-	et_2 = time.time()
-	return result_list		
-				
+    st = time.time()
+    for group_item in chromosome:
+        group_time  = 0
+        for test_item in group_item:
+            group_time += TimeList[test_item]
+            temp_count = max_time - group_time + 0.5 * TimeList[test_item]
+            if group_time in result_dict.keys():
+                result_dict[group_time].append((group_time,test_item,temp_count))
+            else:
+                result_dict[group_time] = [(group_time,test_item,temp_count)]
+    et_1 = time.time()
+    tt = copy.deepcopy(result_dict.keys())
+    tt.sort()
+    init_cov = set()
+    for item in tt:
+        temp_cov = set()
+        for test_item in result_dict[item]:
+            temp_name = test_item[1]
+            temp_cov = temp_cov|CoverageDict[temp_name]
+        temp_diff_index = temp_cov - init_cov
+        init_cov = init_cov|temp_cov
+        for i in temp_diff_index:
+            result_list.append((test_item,CoverageNumber[i]))
+    et_2 = time.time()
+    return result_list		
+                    
 def getAveragePercentCoverage(chromosome):
-	firstCoveredSum = 0
-	st = time.time()
-	apxcc_count_list = getFirstTest(chromosome)
-	for item in apxcc_count_list:
-		firstCoveredSum += (item[0][2] * item[1])
-	apxcc = firstCoveredSum * 1.0/(MaxTime * sum(CoverageNumber))
-	return apxcc
+    firstCoveredSum = 0
+    st = time.time()
+    apxcc_count_list = getFirstTest(chromosome)
+    for item in apxcc_count_list:
+        firstCoveredSum += (item[0][2] * item[1])
+    apxcc = firstCoveredSum * 1.0/(MaxTime * sum(CoverageNumber))
+    return apxcc
 	
 
 # get all the APxC and the corresponding fitness value for the populations
 def getAllAveragePercentageCoverageMetricAndFitness(temp_list):
-	Metric = []
-	Fitness = [0]*len(temp_list)
-	tt = copy.deepcopy(temp_list)
-	st = time.time()
-	for item in temp_list:
-		if item not in ApxccIndex:
-			Metric.append(getAveragePercentCoverage(item))
-		else:
-			Metric.append(ApxccValue[ApxccIndex.index(item)])
-	# update the populationdict to record the corresponding apfxcc for the current iteration
-	global ApxccIndex
-	global ApxccValue
-	ApxccIndex = []
-	ApxccValue = []
-	for i in range(len(temp_list)):
-           	ApxccIndex.append(temp_list[i])
-		ApxccValue.append(Metric[i])
-	temp_Metric = copy.deepcopy(Metric)
-	temp_Metric.sort()
-	Positions = [0]*len(temp_Metric)
-	for i in range(len(Metric)):
-		for j in range(len(temp_Metric)):
-			if temp_Metric[j] == Metric[i]:
-				Positions[i] = j+1
-				temp_Metric[j] = -1
-				break
-	for i in range(len(Positions)):
-		Fitness[i] = 2 * ((Positions[i]-1)/(PopulationSize*1.0))
-	return Fitness
+    Metric = []
+    Fitness = [0]*len(temp_list)
+    tt = copy.deepcopy(temp_list)
+    st = time.time()
+    for item in temp_list:
+        if item not in ApxccIndex:
+            Metric.append(getAveragePercentCoverage(item))
+        else:
+            Metric.append(ApxccValue[ApxccIndex.index(item)])
+    # update the populationdict to record the corresponding apfxcc for the current iteration
+    global ApxccIndex
+    global ApxccValue
+    ApxccIndex = []
+    ApxccValue = []
+    for i in range(len(temp_list)):
+        ApxccIndex.append(temp_list[i])
+        ApxccValue.append(Metric[i])
+    temp_Metric = copy.deepcopy(Metric)
+    temp_Metric.sort()
+    Positions = [0]*len(temp_Metric)
+    for i in range(len(Metric)):
+        for j in range(len(temp_Metric)):
+            if temp_Metric[j] == Metric[i]:
+                Positions[i] = j+1
+                temp_Metric[j] = -1
+                break
+    for i in range(len(Positions)):
+        Fitness[i] = 2 * ((Positions[i]-1)/(PopulationSize*1.0))
+    return Fitness
 
 
 def getMaxAveragePercentageCoverage(temp_list):
-        Metric = {}
-        for item in temp_list:
-                apxc = getAveragePercentCoverage(item)
-                if apxc not in Metric.keys():
-                        Metric[apxc] = [item]
-                else:
-                        Metric[apxc].append(item)
-        tt = Metric.keys()
-        tt.sort()
-        return Metric[tt[-1]]
+    Metric = {}
+    for item in temp_list:
+        apxc = getAveragePercentCoverage(item)
+        if apxc not in Metric.keys():
+            Metric[apxc] = [item]
+        else:
+            Metric[apxc].append(item)
+    tt = Metric.keys()
+    tt.sort()
+    return Metric[tt[-1]]
 
 
 
 # Stochastic Universal Sampling
 def SUS(temp_fitness,temp_list,N):
-	totalFitness = 0
-	P = 0
-	for i in range(len(temp_fitness)):
-		totalFitness += temp_fitness[i]
-	P = int(totalFitness/N)
-	print P
-	start = random.randint(0,P)
-	individuals = []
-	index = 0
-	Sum = temp_fitness[index]
-	for i in range(N):
-		pointer = start + i * P
-		if Sum >= pointer:
-			individuals.append(index)
-		else:
-			index += 1
-			for j in range(index,len(temp_fitness)):
-				Sum += temp_fitness[j]
-				index = j
-				if Sum >= pointer:
-					individuals.append(j)
-					break
-	return individuals
+    totalFitness = 0
+    P = 0
+    for i in range(len(temp_fitness)):
+        totalFitness += temp_fitness[i]
+    P = int(totalFitness/N)
+    print P
+    start = random.randint(0,P)
+    individuals = []
+    index = 0
+    Sum = temp_fitness[index]
+    for i in range(N):
+        pointer = start + i * P
+        if Sum >= pointer:
+            individuals.append(index)
+        else:
+            index += 1
+            for j in range(index,len(temp_fitness)):
+                Sum += temp_fitness[j]
+                index = j
+                if Sum >= pointer:
+                    individuals.append(j)
+                    break
+    return individuals
 
 def chaMax(temp_list):
-	max_select = (0,0)
-	for i in temp_list:
-		if i[1] > max_select[1]:
-			max_select = (i[0],i[1])
-	return max_select
+    max_select = (0,0)
+    for i in temp_list:
+        if i[1] > max_select[1]:
+            max_select = (i[0],i[1])
+    return max_select
 
 def checklimit(chromosome):
-	for i in chromosome:
-		temp_time = 0
-		for j in i:
-			temp_time += TimeList[j]
-		if temp_time > TimeLimit:
-			return False
-		else:
-			continue
-	return True
+    for i in chromosome:
+        temp_time = 0
+        for j in i:
+            temp_time += TimeList[j]
+        if temp_time > TimeLimit:
+            return False
+        else:
+            continue
+    return True
 
 def dropRepeat(temp_list):
-	unrepeat = []
-	for item in temp_list:
-		if item not in unrepeat:
-			if checklimit(item):
-				unrepeat.append(item)
-			else:
-				continue
-	return unrepeat
+    unrepeat = []
+    for item in temp_list:
+        if item not in unrepeat:
+            if checklimit(item):
+                unrepeat.append(item)
+            else:
+                continue
+    return unrepeat
 
 # Tournament selection strategy
 def championships(temp_fitness,temp_list,N):
-	if len(temp_list) < N or len(temp_list) == N:
-		return temp_list
-	individuals = []
-	sub_number = 4
-	while len(individuals) < N:
-		#print '12121'
-		index_list = random.sample(range(len(temp_list)),sub_number)
-		index_fitness = []
-		for i in index_list:
-			index_fitness.append((temp_list[i],temp_fitness[i]))
-		selected = chaMax(index_fitness)[0]
-		if selected in individuals:
-			continue
-		elif checklimit(selected) == False:
-			continue
-		else:
-			individuals.append(selected)
-	return individuals
+    if len(temp_list) < N or len(temp_list) == N:
+        return temp_list
+    individuals = []
+    sub_number = 4
+    while len(individuals) < N:
+        index_list = random.sample(range(len(temp_list)),sub_number)
+        index_fitness = []
+        for i in index_list:
+            index_fitness.append((temp_list[i],temp_fitness[i]))
+        selected = chaMax(index_fitness)[0]
+        if selected in individuals:
+            continue
+        elif checklimit(selected) == False:
+            continue
+        else:
+            individuals.append(selected)
+    return individuals
 
 def Selection(N,temp_list):
-	# randomly select individuals, only for quick coding...
-	tt = copy.deepcopy(temp_list)
-	tt = dropRepeat(tt)
-	Fitness = getAllAveragePercentageCoverageMetricAndFitness(tt)
-	selected_individuals = championships(Fitness,tt,N)
-	return selected_individuals
+    # randomly select individuals, only for quick coding...
+    tt = copy.deepcopy(temp_list)
+    tt = dropRepeat(tt)
+    Fitness = getAllAveragePercentageCoverageMetricAndFitness(tt)
+    selected_individuals = championships(Fitness,tt,N)
+    return selected_individuals
 
 def getIndex(temp_test,temp_list):
-	for item in temp_list:
-		for j in range(len(item)):
-			if item[j] == temp_test:
-				return j
-			else:
-				continue
+    for item in temp_list:
+        for j in range(len(item)):
+            if item[j] == temp_test:
+                return j
+            else:
+                continue
+
 def getTestCoverage(c):
-        count = 0
-        for i in c:
-                count += CoverageNumber[i]
-        return count
+    count = 0
+    for i in c:
+        count += CoverageNumber[i]
+    return count
 
 # basic quick sort
 def quickSort(temp_list):
-        less = []
-        pivotList = []
-        more = []
-        if len(temp_list) <= 1:
-                return temp_list
-        else:
-                pivot = temp_list[0]
-                for i in temp_list:
-                        if i[1] < pivot[1]:
-                                less.append(i)
-                        elif i[1] > pivot[1]:
-                                more.append(i)
-                        else:
-                                pivotList.append(i)
-
-        less = quickSort(less)
-        more = quickSort(more)
-
-        return more + pivotList + less
+    less = []
+    pivotList = []
+    more = []
+    if len(temp_list) <= 1:
+        return temp_list
+    else:
+        pivot = temp_list[0]
+        for i in temp_list:
+            if i[1] < pivot[1]:
+                less.append(i)
+            elif i[1] > pivot[1]:
+                more.append(i)
+            else:
+                pivotList.append(i)
+    less = quickSort(less)
+    more = quickSort(more)
+    return more + pivotList + less
 
 def getSortedTest(temp_list):
-	tt = []
-	for item in temp_list:
-		tt.append((item,getTestCoverage(CoverageDict[item])))
-	return quickSort(tt)
+    tt = []
+    for item in temp_list:
+        tt.append((item,getTestCoverage(CoverageDict[item])))
+    return quickSort(tt)
 
 def quick_sort_time(temp_name):
-        temp_list = []
-        for i in range(len(temp_name)):
-                temp_list.append((temp_name[i],TimeList[temp_name[i]]))
-        return quickSort(temp_list)
+    temp_list = []
+    for i in range(len(temp_name)):
+        temp_list.append((temp_name[i],TimeList[temp_name[i]]))
+    return quickSort(temp_list)
 
 def getTestTime(temp_list):
-	resultdict = {}
-	for item in temp_list:
-		temp_time = 0
-		for i in item:
-			resultdict[i] = temp_time
-			temp_time += TimeList[i]
-	return resultdict
+    resultdict = {}
+    for item in temp_list:
+        temp_time = 0
+        for i in item:
+            resultdict[i] = temp_time
+            temp_time += TimeList[i]
+    return resultdict
 
 # sort the item in temp_t with its corresponding execution time in temp_p
 def CrossOver_Sort(temp_t, temp_p):
-	sorted_t = []
-	index_dict = {}
-	timedict = getTestTime(temp_p)
-	for item in temp_t:
-		temptime = timedict[item]
-		if temptime not in index_dict.keys():
-			index_dict[temptime] = [item]
-		else:
-			index_dict[temptime].append(item)
-	index_list = index_dict.keys()
-	index_list.sort()
-	for i in index_list:
-		temp_list = index_dict[i]
-		if len(temp_list) == 1:
-			sorted_t.append(temp_list[0])
-		else:
-			temp_list = getSortedTest(temp_list)
-			for item in temp_list:
-				sorted_t.append(item[0])
-	return sorted_t
+    sorted_t = []
+    index_dict = {}
+    timedict = getTestTime(temp_p)
+    for item in temp_t:
+        temptime = timedict[item]
+        if temptime not in index_dict.keys():
+            index_dict[temptime] = [item]
+        else:
+            index_dict[temptime].append(item)
+    index_list = index_dict.keys()
+    index_list.sort()
+    for i in index_list:
+        temp_list = index_dict[i]
+        if len(temp_list) == 1:
+            sorted_t.append(temp_list[0])
+        else:
+            temp_list = getSortedTest(temp_list)
+            for item in temp_list:
+                sorted_t.append(item[0])
+    return sorted_t
 
 def getMinAll(temp_1,temp_2):
-	temp_min = 1000000
-	for item in temp_1:
-		if len(item) < temp_min:
-			temp_min = len(item)
-	for item in temp_2:
-		if len(item) < temp_min:
-			temp_min = len(item)
-	return temp_min
+    temp_min = 1000000
+    for item in temp_1:
+        if len(item) < temp_min:
+            temp_min = len(item)
+    for item in temp_2:
+        if len(item) < temp_min:
+            temp_min = len(item)
+    return temp_min
 
 def getGroupTime(temp_list):
 	time_list = []
