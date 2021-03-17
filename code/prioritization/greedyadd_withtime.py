@@ -17,10 +17,10 @@ LimitTime = 0
 def tree(): return defaultdict(tree)
 
 def readFile(filepath):
-        f = open(filepath)
-        content = f.read()
-        f.close()
-        return content.splitlines()
+    f = open(filepath)
+    content = f.read()
+    f.close()
+    return content.splitlines()
 
 # load pickle file for coverage, 
 def LoadPickle(filepath):
@@ -39,7 +39,7 @@ def quickSort(temp_list):
     if len(temp_list) <= 1:
         return temp_list
     else:
-         pivot = temp_list[0]
+        pivot = temp_list[0]
         for i in temp_list:
             if i[1] < pivot[1]:
                 less.append(i)
@@ -101,10 +101,10 @@ def getAllCount(temp_list):
     return count
 
 def quick_sort_time(temp_name):
-        temp_list = []
-        for i in range(len(temp_name)):
-                temp_list.append((temp_name[i],TimeList[temp_name[i]]))
-        return quickSort(temp_list)
+    temp_list = []
+    for i in range(len(temp_name)):
+        temp_list.append((temp_name[i],TimeList[temp_name[i]]))
+    return quickSort(temp_list)
 
 
 # list_group and list_time record the sorted result of group while prioritization
@@ -271,7 +271,7 @@ def countnumber(templist):
 
 if __name__ == '__main__':
     #print greedyAdditional(2,['t1','t2','t3','t4'],['000001','010000','101000','101000'],[50,200,60,20],20)
-    path = '../../subject/experiment/'
+    path = '../../subjects/'
     subject_list = readFile(path + 'uselist-all')
     if len(sys.argv) == 5:
         g_n = int(sys.argv[1])

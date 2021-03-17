@@ -254,7 +254,7 @@ def TestCheckLimit(chromosome):
     return True
 
 if __name__ == '__main__':
-    path = '../../subject/experiment/'
+    path = '../../subjects/'
     if len(sys.argv) == 5:
         g_n = int(sys.argv[1])
         tl_n = float(sys.argv[2])
