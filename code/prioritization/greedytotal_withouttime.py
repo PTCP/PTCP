@@ -134,7 +134,7 @@ def divideSmallandLarge(temp_list,temp_number,temp_time,temp_avg):
     small = []
     avg = sum(temp_time)/(temp_number * 1.0)
     for item in temp_list:
-        if TimeList[item] > (temp_avg * avg):
+        if TimeList[item] > (avg):
             large.append(item)
         else:
             small.append(item)

@@ -9,6 +9,7 @@ import errno
 import time
 import sys
 import pickle
+import unittest
 
 
 TimeList = []
@@ -139,7 +140,7 @@ def divideSmallandLarge(temp_list,temp_number,temp_time,temp_avg):
     small = []
     avg = sum(temp_time)/(temp_number * 1.0)
     for item in temp_list:
-        if TimeList[item] > (temp_avg * avg):
+        if TimeList[item] > (avg):
             large.append(item)
         else:
             small.append(item)
@@ -159,7 +160,7 @@ def selection(test_cov,number_list,unsorted_dict,detected_unit):
             s = test_item
             uni_max = uni_sum
     if uni_max == -1:
-        return False
+        return -1
     else:
         return s
 
@@ -207,8 +208,7 @@ def greedyAdditional(g_number, test_name, test_cov, number_list, test_time,tl_nu
         # get a candidate test by using additional strategy
         candidate_test = selection(test_cov,number_list,candidate_dict,detected_cov)
         # if no candidate test is selected, the detected_cov is reset to empty, and additional strategy is repeated.
-        if candidate_test == False:
-            #print 'additional init ...'
+        if candidate_test == -1:
             detected_cov = set()
             candidate_test = selection(test_cov,number_list,candidate_dict,detected_cov)
             #continue
@@ -269,8 +269,9 @@ def countnumber(templist):
     return count
 
 
+
 if __name__ == '__main__':
-    #print greedyAdditional(2,['t1','t2','t3','t4'],['000001','010000','101000','101000'],[50,200,60,20],20)
+    
     path = '../../subjects/'
     subject_list = readFile(path + 'uselist-all')
     if len(sys.argv) == 5:
@@ -281,6 +282,7 @@ if __name__ == '__main__':
     else:
         print('Usage: greedytotal_withtime.py <group_number> <time_constraint> <test_granularity> <coverage_granularity>.')
         sys.exit(0)
+    
     '''
     # the subjects list used in some experiments in the paper
     if 'dynamic' in tosem_path:
@@ -290,6 +292,7 @@ if __name__ == '__main__':
     else:
         raw_input('error check ...')
     '''
+    
     for subject_item in subject_list:
         subject_path = path + subject_item + '/' + tosem_path + '/'
         testlist = readFile(subject_path + 'testList')
@@ -325,4 +328,5 @@ if __name__ == '__main__':
         f_tolerate.write(str(tc))
         f_tolerate.close()
         print subject_path + ' is completed!'
+
 

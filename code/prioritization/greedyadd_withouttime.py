@@ -138,7 +138,7 @@ def divideSmallandLarge(temp_list,temp_number,temp_time,temp_avg):
     small = []
     avg = sum(temp_time)/(temp_number * 1.0)
     for item in temp_list:
-        if TimeList[item] > (temp_avg * avg):
+        if TimeList[item] > (avg):
             large.append(item)
         else:
             small.append(item)
@@ -156,7 +156,7 @@ def selection(test_cov,number_list,unsorted_dict,detected_unit):
             s = test_item
             uni_max = uni_sum
     if uni_max == -1:
-        return False
+        return -1
     else:
         return s
 
@@ -206,7 +206,7 @@ def greedyAdditional(g_number, test_name, test_cov, number_list, test_time,tl_nu
         # get a candidate test by using additional strategy
         candidate_test = selection(test_cov,number_list,candidate_dict,detected_cov)
         # if no candidate test is selected, the detected_cov is reset to empty, and additional strategy is repeated.
-        if candidate_test == False:
+        if candidate_test == -1:
             #print 'additional init ...'
             detected_cov = set()
             candidate_test = selection(test_cov,number_list,candidate_dict,detected_cov)
@@ -267,9 +267,27 @@ def countnumber(templist):
         count += len(item)
     return count
 
+class TestUGA(unittest.TestCase):
+    def test_aga_result(self): 
+        testlist = ['t1','t2','t3','t4','t5','t6']
+        coveragedict = {0:set([0,1,2]),
+                    1:set([2,3,4]),
+                    2:set([0,1]),
+                    3:set([2,4]),
+                    4:set([1,3]),
+                    5:set([4])}
+        numberlist = [1,1,1,1,2]
+        timelist = [4,20,6,2,5,9]
+        #test_result = greedyAdditional(3,testlist,coveragedict,numberlist,timelist,23)
+        oracle = [['t4','t5','t6'],['t1','t3'],['t2']]
+        test_result = greedyAdditional(3,testlist,coveragedict,numberlist,timelist,1.5)[0]
+        print('test result: %s'%str(test_result))
+        self.assertEqual(test_result, oracle)
 
 if __name__ == '__main__':
-    #print greedyAdditional(2,['t1','t2','t3','t4'],['000001','010000','101000','101000'],[50,200,60,20],20)
+    # test case for UGA
+    unittest.main()
+
     path = '../../subjects/'
     subject_list = readFile(path + 'uselist-all')
     g_n = int(sys.argv[1])
