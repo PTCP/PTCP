@@ -57,4 +57,8 @@ This is a simple document for all the scripts used in PTCP, including collecting
     * run python calculate_time_all.py : calculating FT/AT, the parameters are assigned in the script.
     
 * the results of parallel test prioritization are stored in the file 'subjects.tar.gz', please unzip it in the dir './subjects/'
-   * TBD
+
+
+* TBD
+adding test cases
+adding script for making table and fig
