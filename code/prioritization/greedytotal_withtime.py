@@ -38,13 +38,6 @@ def getIndex(temp_list,temp_time,temp_limit):
         assert(0)
 
 
-# get candidate group with fewest test execution time, the limit of selection criteria are as follows:
-#1. the execution time for each group < group limit time (average time + bar time)
-#2. the left time for each group (group limit time - selected execution time) > the max execution time among the unselected test 
-#3. ...
-#def getIndex_tt(temp_list, temp_time, temp_limit):
-	#pass
-
 # get candidate group with the maximum coverage
 def getMaxCoverage(temp_cov, temp_index):
     max_cov = -1
@@ -104,16 +97,6 @@ def quick_sort_time(temp_name):
         temp_list.append((temp_name[i],TimeList[temp_name[i]]))
     return quickSort(temp_list)
 
-
-def dropRepeat(temp_list):
-    unrepeat = []
-    for item in temp_list:
-        if item not in unrepeat:
-            if checklimit(item):
-                unrepeat.append(item)
-            else:
-                continue
-        return unrepeat
 
 def getAllTime(temp_list):
     temp_count = 0
