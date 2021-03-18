@@ -4,6 +4,7 @@ from bitarray import bitarray
 import copy
 import time
 import sys
+import unittest
 
 CoverageList = []
 CoverageNumber = []
@@ -253,7 +254,34 @@ def TestCheckLimit(chromosome):
                 continue
     return True
 
+class TestAGT(unittest.TestCase):
+    def test_agt_result(self): 
+        testlist = ['t1','t2','t3','t4','t5','t6']
+        '''
+        coveragedict = {0:set([0,1,2]),
+                    1:set([2,3,4]),
+                    2:set([0,1]),
+                    3:set([2,4]),
+                    4:set([1,3]),
+                    5:set([4])}
+        '''
+        coveragelist = ['11110101',
+                        '00111010',
+                        '01000000',
+                        '00101010',
+                        '01010001',
+                        '00001001']
+        numberlist = [1,1,1,1,2,1,1,1]
+        timelist = [4,20,6,2,5,9]
+        oracle = [['t1','t6'],['t4','t5','t3'],['t2']]
+        test_result = greedytotal(3,testlist,coveragelist,timelist,numberlist,1.5)[0]
+        print('test result: %s'%str(test_result))
+        self.assertEqual(test_result, oracle)
+
 if __name__ == '__main__':
+    # test case for UGT
+    unittest.main()
+    
     path = '../../subjects/'
     if len(sys.argv) == 5:
         g_n = int(sys.argv[1])
@@ -263,6 +291,7 @@ if __name__ == '__main__':
     else:
         print('Usage: greedytotal_withtime.py <group_number> <time_constraint> <test_granularity> <coverage_granularity>.')
         sys.exit(0)
+    
     '''
     # the subjects list used in some experiments in the paper
     if 'dynamic' in tosem_path:
@@ -272,6 +301,7 @@ if __name__ == '__main__':
     else:
         raw_input('error check ...')
     '''
+    
     subject_list = readFile(path + 'uselist-all')
     for subject_item in subject_list:
         subject_path = path + subject_item + '/' + tosem_path + '/'
@@ -303,4 +333,5 @@ if __name__ == '__main__':
         f_tolerate.write(str(tc))
         f_tolerate.close()
         print subject_path + ' is completed! ' + str(tc)
+    
 

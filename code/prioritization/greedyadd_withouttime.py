@@ -9,6 +9,7 @@ import errno
 import time
 import sys
 import pickle
+import unittest
 
 
 TimeList = []
@@ -268,8 +269,29 @@ def countnumber(templist):
     return count
 
 
+class TestUGA(unittest.TestCase):
+    def test_uga_result(self): 
+        testlist = ['t1','t2','t3','t4','t5','t6']
+        coveragedict = {0:set([0,2]),
+                    1:set([2,3,4]),
+                    2:set([1]),
+                    3:set([2,4]),
+                    4:set([1,3]),
+                    5:set([4])}
+        numberlist = [1,1,1,1,2]
+        timelist = [4,20,6,2,5,9]
+        #test_result = greedyAdditional(3,testlist,coveragedict,numberlist,timelist,23)
+        oracle = [['t4','t1','t3'],['t5','t6'],['t2']]
+        test_result = greedyAdditional(3,testlist,coveragedict,numberlist,timelist,1.5)[0]
+        print('test result: %s'%str(test_result))
+        self.assertEqual(test_result, oracle)
+
+
 if __name__ == '__main__':
-    
+    # test case for UGA
+    unittest.main()
+    #sys.exit(0)
+
     if len(sys.argv) == 5:
         g_n = int(sys.argv[1])
         tl_n = float(sys.argv[2])
