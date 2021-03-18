@@ -4,6 +4,7 @@ from bitarray import bitarray
 import copy
 import time
 import sys
+import unittest
 
 CoverageList = []
 CoverageNumber = []

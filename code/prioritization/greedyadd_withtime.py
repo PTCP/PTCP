@@ -149,7 +149,7 @@ def divideSmallandLarge(temp_list,temp_number,temp_time,temp_avg):
 
 # select candidate test based on greedy additional strategy
 def selection(test_cov,number_list,unsorted_dict,detected_unit):
-    s,uni_max = -1,-1
+    s,uni_max = -1,0
     for test_item in unsorted_dict:
         uni_list = test_cov[test_item] - detected_unit
         uni_sum = 0

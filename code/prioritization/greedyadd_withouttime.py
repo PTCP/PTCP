@@ -146,7 +146,7 @@ def divideSmallandLarge(temp_list,temp_number,temp_time,temp_avg):
 
 # select candidate test based on greedy additional strategy
 def selection(test_cov,number_list,unsorted_dict,detected_unit):
-    s,uni_max = -1,-1
+    s,uni_max = -1,0
     for test_item in unsorted_dict:
         uni_list = test_cov[test_item] - detected_unit
         uni_sum = 0
@@ -267,41 +267,25 @@ def countnumber(templist):
         count += len(item)
     return count
 
-class TestUGA(unittest.TestCase):
-    def test_aga_result(self): 
-        testlist = ['t1','t2','t3','t4','t5','t6']
-        coveragedict = {0:set([0,1,2]),
-                    1:set([2,3,4]),
-                    2:set([0,1]),
-                    3:set([2,4]),
-                    4:set([1,3]),
-                    5:set([4])}
-        numberlist = [1,1,1,1,2]
-        timelist = [4,20,6,2,5,9]
-        #test_result = greedyAdditional(3,testlist,coveragedict,numberlist,timelist,23)
-        oracle = [['t4','t5','t6'],['t1','t3'],['t2']]
-        test_result = greedyAdditional(3,testlist,coveragedict,numberlist,timelist,1.5)[0]
-        print('test result: %s'%str(test_result))
-        self.assertEqual(test_result, oracle)
 
 if __name__ == '__main__':
-    # test case for UGA
-    unittest.main()
-
-    path = '../../subjects/'
-    subject_list = readFile(path + 'uselist-all')
-    g_n = int(sys.argv[1])
-    tl_n = float(sys.argv[2])
-    tosem_path = str(sys.argv[3])
-    gran = str(sys.argv[4])
+    
+    if len(sys.argv) == 5:
+        g_n = int(sys.argv[1])
+        tl_n = float(sys.argv[2])
+        tosem_path = str(sys.argv[3])
+        gran = str(sys.argv[4])
+    else:
+        print('Usage: greedytotal_withtime.py <group_number> <time_constraint> <test_granularity> <coverage_granularity>.')
+        sys.exit(0)
     '''
-	if 'dynamic' in tosem_path:
+    if 'dynamic' in tosem_path:
         subject_list = readFile(path + 'uselist-adddy')
     elif 'callgraph' in tosem_path:
         subject_list = readFile(path + 'uselist-addcg')
     else:
         raw_input('error check ...')
-        '''
+    '''
     #subject_list = readFile(path + 'uselist-gnadd-all')
     for subject_item in subject_list:
         #if subject_item in skip:
@@ -337,4 +321,5 @@ if __name__ == '__main__':
         f_tolerate.write(str(tc))
         f_tolerate.close()
         print subject_path + ' is completed!'
+    
 

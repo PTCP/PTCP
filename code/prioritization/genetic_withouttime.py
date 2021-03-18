@@ -92,7 +92,9 @@ def GenerateRandomPopulation(g_number, test_name, time_limit):
         print 'length not equal ...'
         print len(tt)
         print len(temp_list)
-        raw_input('random init error ...')
+        #raw_input('random init error ...')
+        print('random init error...')
+        assert(0)
     return temp_list
 
 
@@ -571,14 +573,18 @@ def Mutation_coarsness(temp_list):
             print '--------------------------------'
             print p1[Mth[0]]
             print p1[Mth[1]]
-            raw_input('error...')
+            #raw_input('error...')
+            print('mutation coarsness error...')
+            assert(0)
         try:
             temp = p1[Mth[0]][Kth1]
             p1[Mth[0]][Kth1] = p1[Mth[1]][Kth2]
             p1[Mth[1]][Kth2] = temp
         except:
             print 'p1 : ' + str(p1)
-            raw_input('mutation coarsness error ...')
+            #raw_input('mutation coarsness error ...')
+            print('mutation coarsness error ...')
+            assert(0)
         result_list.append(p1)
     return result_list
 
@@ -637,7 +643,9 @@ def CrossOver(temp_list,temp_limit):
             print i
             print temp_len
             print 'length of input : ' + str(len(temp_list))
-            raw_input('crossover error ...')
+            #raw_input('crossover error ...')
+            print('crossover error ...')
+            assert(0)
 
     crossover_list = CrossOver_coarsness(crossover_list,temp_limit)
     # to crossover the individuals between two groups
@@ -765,12 +773,16 @@ def randomInitCoverage(size_test,size_cov):
 
 
 if __name__ == '__main__':
-    path = '/PTCP/subject/experiment/'
+    path = '../../subjects/'
+    if len(sys.argv) == 5:
+        g_n = int(sys.argv[1])
+        tl_n = float(sys.argv[2])
+        tosem_path = str(sys.argv[3])
+        gran = str(sys.argv[4])
+    else:
+        print('Usage: greedytotal_withtime.py <group_number> <time_constraint> <test_granularity> <coverage_granularity>.')
+        sys.exit(0)
     subject_list = readFile(path + 'uselist-all')
-    g_n = int(sys.argv[1])
-    tl_n = float(sys.argv[2])
-    tosem_path = str(sys.argv[3])
-    gran = str(sys.argv[4])
     #if 'dynamic' in tosem_path:
     #    subject_list = readFile(path + 'uselist-adddy')
     #elif 'callgraph' in tosem_path:
